@@ -29,35 +29,42 @@ public class AddressConverter {
 	    		  arg_map.put(args[i], "");
 	    	  else
 	    	  {
-	    		  //handle --x=y cases
-	    		  if(args[i].startsWith("--"))
-	    		  {
-	    			  int value_after_index = args[i].indexOf("=");
-	    			  String option = args[i].substring(2, value_after_index);
-	    			  String value = args[i].substring(value_after_index+1);
-	    			  
-	    			  //Map --x options to its corresponding single letter options
-	    			  // So, the core logic of calculations remains same with ease of extracting required info
-	    			  switch(option)
-	    			  {
-	    			  	case "partition-start": arg_map.put("-b", value); break;
-	    			  	case "logical-known": 	arg_map.put("-l", value); break;
-	    			  	case "physical-known": 	arg_map.put("-p", value);break;
-	    			  	case "cluster-known": 	arg_map.put("-c", value);break;
-	    			  	case "cluster-size": 	arg_map.put("-k", value);break;
-	    			  	case "reserved": 		arg_map.put("-r", value);break;
-	    			  	case "fat-tables":		arg_map.put("-t", value);break;
-	    			  	case "fat-length": 		arg_map.put("-f", value);break;
-	    			  	default: System.out.println("Invalid Arguments...");return;
-	    			  }	    			  
-	    		  }
-	    		  else
-	    		  {
-		    		  //option followed by its value
-			    	  System.out.println("added = " + args[i]);
-			    	  arg_map.put(args[i], args[i+1]);
-			    	  i++;
-	    		  }
+		    		  //handle --x=y cases
+		    		  if(args[i].startsWith("--"))
+		    		  {
+		    			  //special case for -B
+		    			  if(args[i].equals("--byte-address"))
+		    		  			arg_map.put("-B","");
+		    			  else
+		    			  {
+			    			  int value_after_index = args[i].indexOf("=");
+			    			  String option = args[i].substring(2, value_after_index);
+			    			  String value = args[i].substring(value_after_index+1);
+			    			  
+			    			  //Map --x options to its corresponding single letter options
+			    			  // So, the core logic of calculations remains same with ease of extracting required info
+			    			  switch(option)
+			    			  {
+			    			  	case "partition-start": arg_map.put("-b", value); break;
+			    			  	case "logical-known": 	arg_map.put("-l", value); break;
+			    			  	case "physical-known": 	arg_map.put("-p", value);break;
+			    			  	case "cluster-known": 	arg_map.put("-c", value);break;
+			    			  	case "cluster-size": 	arg_map.put("-k", value);break;
+			    			  	case "reserved": 		arg_map.put("-r", value);break;
+			    			  	case "fat-tables":		arg_map.put("-t", value);break;
+			    			  	case "fat-length": 		arg_map.put("-f", value);break;	  
+			    			  	case "sector-size": 	arg_map.put("-s", value);break;	  
+			    			  	default: System.out.println("Invalid Arguments...");return;
+			    			  }
+		    			  }
+		    		  }
+		    		  else
+		    		  {
+			    		  //option followed by its value
+				    	  System.out.println("added = " + args[i]);
+				    	  arg_map.put(args[i], args[i+1]);
+				    	  i++;
+		    		  }
 		    	  	  
 	    	  }
 	      }
@@ -124,6 +131,19 @@ public class AddressConverter {
 	}
 	
 	
+	public void displayConversion(long converted_address)
+	{
+		if(arg_map.containsKey("-B"))
+		{
+			int sector_size = 512;
+			if(arg_map.containsKey("-s"))
+				sector_size =Integer.parseInt(arg_map.get("-s"));
+			converted_address*= sector_size; //in bytes instead of sectors
+		}
+		System.out.println(converted_address);
+	}
+	
+	
 	public void Physical_to_Logical()
 	{
 		//check required parameters are present or not
@@ -136,7 +156,8 @@ public class AddressConverter {
 		long physical = Long.parseLong(arg_map.get("-p"));
 		long logical_offset = Long.parseLong(offset);
 		
-		System.out.println("Logical address == "+(physical-logical_offset));
+		System.out.print("Logical address == ");
+		displayConversion((physical-logical_offset));
 	}
 	
 	public void Cluster_to_Physical()
@@ -158,7 +179,8 @@ public class AddressConverter {
 		//find the physical address 
 		long address = Integer.parseInt(reserved) + (Integer.parseInt(no_of_FAT)*Integer.parseInt(FAT_size)) + (Integer.parseInt(cluster_size)*(Integer.parseInt(cluster)-2));
 		address = Integer.parseInt(offset) + address;
-		System.out.println("Physical address == "+address);
+		System.out.print("Physical address == ");
+		displayConversion(address);
 	}
 	
 	public void Cluster_to_Logical()
@@ -176,7 +198,8 @@ public class AddressConverter {
 			}
 		 //same as cluster to physical just don't add the offset   
 		 long address = Integer.parseInt(reserved) + (Integer.parseInt(no_of_FAT)*Integer.parseInt(FAT_size)) + (Integer.parseInt(cluster_size)*(Integer.parseInt(cluster)-2));
-		 System.out.println("Logical address == "+address);
+		 System.out.print("Logical address == ");
+			displayConversion(address);
 	}
 	
 	public void Logical_to_Physical()
@@ -189,7 +212,8 @@ public class AddressConverter {
 		long logical = Long.parseLong(arg_map.get("-l"));
 		long partition_offset = Long.parseLong(offset);
 		
-		System.out.println("Logical address == "+(logical+partition_offset));
+		System.out.print("Physical address == ");
+		displayConversion((logical+partition_offset));
 	}
 	
 	public int Physical_to_cluster(long physical)
