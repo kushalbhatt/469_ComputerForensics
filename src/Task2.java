@@ -14,7 +14,7 @@ public class Task2 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String inputfilepath = args[0];//"K:/ASU/469_ Forensics/usb_test_raw.001";
+		String inputfilepath = "K:/ASU/469_ Forensics/usb_test_raw.001";
 		String inputfilename = inputfilepath;
 		
 		//extract just the file name
@@ -27,34 +27,34 @@ public class Task2 {
 		try {
 			
 	             /********************MD5*********************/
-//				
-//				byte md5[] = computeHash(file,"MD5");
-//	            
-//	            //Output MD5
-//	            StringBuilder sb = new StringBuilder();
-//	            for (byte b : md5) {
-//	                sb.append(String.format("%02X ", b));
-//	            }
-//	            System.out.println("MD5==   "+ sb.toString());
-//	            
-//	            //Write this to file
-//	            String MD5Filename = "MD5-"+inputfilename+".txt";
-//	            writeDigestToFile(MD5Filename, sb.toString());
-//	            
-//	            /***************SHA-1*************/
-//	            byte sha_1[] = computeHash(file,"SHA-1");
-//	            
-//	            //Output MD5
-//	            sb = new StringBuilder();
-//	            for (byte b : sha_1) {
-//	                sb.append(String.format("%02X ", b));
-//	            }
-//	            System.out.println("SHA-1==   "+ sb.toString());
-//	            
-//	          //Write this to file
-//	            String SHA1Filename = "SHA1-"+inputfilename+".txt";
-//	            writeDigestToFile(SHA1Filename, sb.toString());
-//	            
+				
+				byte md5[] = computeHash(file,"MD5");
+	            
+	            //Output MD5
+	            StringBuilder sb = new StringBuilder();
+	            for (byte b : md5) {
+	                sb.append(String.format("%02X ", b));
+	            }
+	            System.out.println("MD5==   "+ sb.toString());
+	            
+	            //Write this to file
+	            String MD5Filename = "MD5-"+inputfilename+".txt";
+	            writeDigestToFile(MD5Filename, sb.toString());
+	            
+	            /***************SHA-1*************/
+	            byte sha_1[] = computeHash(file,"SHA-1");
+	            
+	            //Output MD5
+	            sb = new StringBuilder();
+	            for (byte b : sha_1) {
+	                sb.append(String.format("%02X ", b));
+	            }
+	            System.out.println("SHA-1==   "+ sb.toString());
+	            
+	          //Write this to file
+	            String SHA1Filename = "SHA1-"+inputfilename+".txt";
+	            writeDigestToFile(SHA1Filename, sb.toString());
+	            
 	            
 	            /** read mbr into buffer 
 	             * Each value in buffer is one byte

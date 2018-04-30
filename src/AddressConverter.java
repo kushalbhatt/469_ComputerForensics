@@ -55,7 +55,7 @@ public class AddressConverter {
 			    			  	case "fat-length": 		arg_map.put("-f", value);break;	  
 			    			  	case "sector-size": 	arg_map.put("-s", value);break;	  
 			    			  	default: System.out.println("Invalid Arguments...");return;
-			    			  }
+			    			  }	
 		    			  }
 		    		  }
 		    		  else
